@@ -19,6 +19,8 @@ def save_data(mod):
 
     if write(data, mod.params["dest"]):
         mod.exit_json(msg="Data saved", changed=True)
+    else:
+        mod.fail_json(msg="Data could not be saved")
 
 
 def main():
