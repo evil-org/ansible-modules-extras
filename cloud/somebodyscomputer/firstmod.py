@@ -4,10 +4,13 @@ from __future__ import (absolute_import, division)
 __metaclass__ = type
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.urls import open_url
 
 
 def fetch(url):
-    raise NotImplementedError
+    stream = open_url(url)
+
+    return stream.read()
 
 
 def write(data, dest):
