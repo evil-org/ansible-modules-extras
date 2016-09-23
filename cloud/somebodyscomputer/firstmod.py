@@ -3,13 +3,14 @@
 from __future__ import (absolute_import, division)
 __metaclass__ = type
 
+from urllib2 import URLError
+
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.urls import open_url
 
 
 def fetch(url):
     stream = open_url(url)
-
     return stream.read()
 
 
@@ -18,12 +19,15 @@ def write(data, dest):
 
 
 def save_data(mod):
-    data = fetch(mod.params["url"])
+    try:
+        data = fetch(mod.params["url"])
 
-    if write(data, mod.params["dest"]):
-        mod.exit_json(msg="Data saved", changed=True)
-    else:
-        mod.fail_json(msg="Data could not be saved")
+        if write(data, mod.params["dest"]):
+            mod.exit_json(msg="Data saved", changed=True)
+        else:
+            mod.fail_json(msg="Data could not be saved")
+    except URLError:
+        mod.fail_json(msg="Data could not be retrieved")
 
 
 def main():
