@@ -9,25 +9,29 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.urls import open_url
 
 
+class WriteError(Exception):
+    pass
+
+
 def fetch(url):
     stream = open_url(url)
     return stream.read()
 
 
 def write(data, dest):
-    raise NotImplementedError
+    with open(dest, "w") as dest:
+        dest.write(data)
 
 
 def save_data(mod):
     try:
         data = fetch(mod.params["url"])
-
-        if write(data, mod.params["dest"]):
-            mod.exit_json(msg="Data saved", changed=True)
-        else:
-            mod.fail_json(msg="Data could not be saved")
+        write(data, mod.params["dest"])
+        mod.exit_json(msg="Data saved", changed=True)
     except URLError:
         mod.fail_json(msg="Data could not be retrieved")
+    except WriteError:
+        mod.fail_json(msg="Data could not be saved")
 
 
 def main():
