@@ -6,8 +6,19 @@ __metaclass__ = type
 from ansible.module_utils.basic import AnsibleModule
 
 
+def fetch(url):
+    raise NotImplementedError
+
+
+def write(data, dest):
+    raise NotImplementedError
+
+
 def save_data(mod):
-    mod.exit_json(msg="Data saved", changed=True)
+    data = fetch(mod.params["url"])
+
+    if write(data, mod.params["dest"]):
+        mod.exit_json(msg="Data saved", changed=True)
 
 
 def main():
