@@ -22,6 +22,9 @@ from urllib2 import URLError
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.urls import open_url
 
+ANSIBLE_METADATA = {'metadata_version': '1.0',
+                    'status': ['preview'],
+                    'supported_by': 'community'}
 
 DOCUMENTATION = '''
 ---
